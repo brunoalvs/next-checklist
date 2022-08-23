@@ -37,7 +37,6 @@ export const NavigationVertical = styled.nav`
     width: 2.5rem;
     height: 2.5rem;
 
-    border: 1px dashed white;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -46,37 +45,6 @@ export const NavigationVertical = styled.nav`
 
 `
 
-export const Sidebar = styled.aside`
-  background-color: ${props => props.theme.colors.dark.background[0]};
-  color: ${props => props.theme.colors.dark.text};
-  padding: 1rem .5rem;
-
-  header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-direction: row;
-    padding: 0 .5rem 2rem;
-  }
-
-  .todo-list {
-    list-style: none;
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-gap: 0.5rem;
-
-    .todo {
-      background-color: ${props => props.theme.colors.dark.background[1]};
-      padding: 1rem;
-      border-radius: 0.25rem;
-
-      &:hover {
-        cursor: default;
-        filter: brightness(1.4);
-      }
-    }
-  }
-`
-
 export const Content = styled.main`
+  padding: 2rem;
 `

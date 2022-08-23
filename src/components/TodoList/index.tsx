@@ -1,9 +1,19 @@
-import { Container } from './styles'
+import { IListTodo } from '../../types/todo';
+import { Container, Item } from './styles'
 
-export const TodoList = () => {
+interface TodoListProps {
+  lists: IListTodo[];
+  activeList: (listId: number) => void;
+}
+
+export const TodoList = ({ lists, activeList }: TodoListProps) => {
   return (
     <Container>
-      <h1>Todo List</h1>
+      {lists.map(list => (
+        <Item isActive={list.active} isCompleted={list.completed} className='todo' key={list.id} onClick={() => activeList(list.id)}>
+          {list.title}
+        </Item>
+      ))}
     </Container>
   )
 }

@@ -1,12 +1,5 @@
 import { createContext, useContext, useState } from "react";
-import { IListTodoContext, ITodoContext, ITodo } from "../types/todo";
-
-// export const TodoContext = createContext<ITodoContext>({
-//   todos: [],
-//   addTodo: () => { },
-//   removeTodo: () => { },
-//   toggleTodo: () => { },
-// });
+import { IListTodoContext } from "../types/todo";
 
 export const TodoContext = createContext<IListTodoContext>({
   lists: [],
@@ -30,7 +23,18 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
       title,
       active: false,
       completed: false,
-      list: [],
+      list: [
+        {
+          id: Math.random(),
+          title: 'Todo Item 1',
+          completed: false,
+        },
+        {
+          id: Math.random(),
+          title: 'Todo Item 2',
+          completed: false,
+        }
+      ],
     }]);
   }
 
@@ -39,9 +43,17 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   const toggleList = (id: number) => {
+
+    // turn off all lists
+    setLists(lists.map(list => {
+      list.active = false;
+      return list;
+    }));
+
+    // turn on the list with id
     setLists(lists.map(list => {
       if (list.id === id) {
-        list.active = !list.active;
+        list.active = true;
       }
       return list;
     }));
@@ -108,49 +120,3 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
     </TodoContext.Provider>
   );
 }
-
-
-// export const useTodoContext = () => useContext(TodoContext);
-
-// export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
-//   const [todos, setTodos] = useState<ITodoContext["todos"]>([
-//     {
-//       id: 1,
-//       title: "Design Cmore",
-//       completed: false,
-//     },
-//     {
-//       id: 2,
-//       title: "Learn React",
-//       completed: false,
-//     },
-//     {
-//       id: 3,
-//       title: "Learn TypeScript",
-//       completed: false,
-//     },
-//     {
-//       id: 4,
-//       title: "Learn Next.js",
-//       completed: false,
-//     },
-//   ]);
-
-//   const addTodo = (title: string) => {
-//     setTodos([...todos, { id: Math.random(), title, completed: false }]);
-//   }
-
-//   const removeTodo = (id: number) => {
-//     setTodos(todos.filter(todo => todo.id !== id));
-//   }
-
-//   const toggleTodo = (id: number) => {
-//     setTodos(todos.map(todo => todo.id === id ? { ...todo, completed: !todo.completed } : todo));
-//   }
-
-//   return (
-//     <TodoContext.Provider value={{ todos, addTodo, removeTodo, toggleTodo }}>
-//       {children}
-//     </TodoContext.Provider>
-//   );
-// }

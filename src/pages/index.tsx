@@ -30,9 +30,16 @@ const Home: NextPage = () => {
         </Head>
 
         {lists.find(todo => todo.active === true) ? (
-          <h2>
-            {lists.find(todo => todo.active === true)?.title}
-          </h2>
+          <>
+            <h2>
+              {lists.find(todo => todo.active === true)?.title}
+            </h2>
+            <ul>
+              {lists.find(todo => todo.active === true)?.list.map(item => (
+                <li key={item.id}>{item.title}</li>
+              ))}
+            </ul>
+          </>
         ) : (
           <p>No active todo</p>
         )}
