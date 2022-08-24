@@ -2,12 +2,18 @@ import { useEffect, useState } from 'react'
 import type { NextPage } from 'next'
 import Head from 'next/head'
 
-import { Layout } from '../components/Layout'
-
 import { useTodoContext } from '../contexts/todo'
+import { Layout } from '../components/Layout'
+import { Tasks } from '../components/Tasks'
 
 const Home: NextPage = () => {
   const { lists } = useTodoContext()
+
+  // const [listActive, setListActive] = useState(lists[0])
+
+  useEffect(() => {
+    // setListActive(lists.find(list => list.active) || lists[0])
+  }, [lists])
 
   useEffect(() => {
     const localItems = localStorage.getItem('items')
@@ -15,10 +21,6 @@ const Home: NextPage = () => {
       // setItems(JSON.parse(localItems))
     }
   }, [])
-
-  useEffect(() => {
-    console.log('items', lists)
-  }, [lists])
 
   return (
     <>
@@ -29,20 +31,7 @@ const Home: NextPage = () => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
-        {lists.find(todo => todo.active === true) ? (
-          <>
-            <h2>
-              {lists.find(todo => todo.active === true)?.title}
-            </h2>
-            <ul>
-              {lists.find(todo => todo.active === true)?.list.map(item => (
-                <li key={item.id}>{item.title}</li>
-              ))}
-            </ul>
-          </>
-        ) : (
-          <p>No active todo</p>
-        )}
+        <Tasks />
       </Layout>
     </>
   )
