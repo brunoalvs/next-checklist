@@ -1,11 +1,15 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { IListTodoContext, IListTodo } from "../types/todo";
+import { IListTodoContext, IListTodo, ITodo } from "../types/todo";
+
+import { v4 as uuidv4 } from 'uuid';
+
+// import { addList } from '../utils/lists'
 
 export const TodoContext = createContext<IListTodoContext>({
   lists: [],
   listActive: {
-    id: 0,
-    title: "",
+    id: '',
+    title: '',
     todos: [],
     active: false,
     completed: false
@@ -13,9 +17,8 @@ export const TodoContext = createContext<IListTodoContext>({
   archived: [],
   addList: () => { },
   removeList: () => { },
-  toggleList: () => { },
+  activeList: () => { },
   archiveList: () => { },
-  getTodoList: (id: number) => { return [] },
   addTodo: () => { },
   removeTodo: () => { },
   toggleTodo: () => { },
@@ -29,118 +32,204 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
   const [archived, setArchived] = useState<IListTodoContext["archived"]>([]);
 
   useEffect(() => {
-    setListActive(
-      lists.find(list => list.active) || lists[0]
-    )
+    console.log('updated list', lists.find(list => list.active)?.title)
+
   }, [lists]);
 
   const addList = (title: string) => {
-    setLists([...lists, {
-      id: Math.random(),
+    const newList: IListTodo = {
+      id: uuidv4(),
       title,
       active: lists.find(list => list.active) ? false : true,
       completed: false,
-      todos: [],
-    }]);
+      todos: []
+    }
+
+    setLists([...lists, newList]);
   }
 
-  const removeList = (id: number) => {
-    setLists(lists.filter(list => list.id !== id));
+  const archiveList = (id: string) => {
+    if (!id) {
+      throw new Error('List ID is required');
+    }
 
-    if (lists.length === 0) {
-      console.log("No lists left. Create a new list."), lists;
+    // Remove list from active list
+    try {
+      const list = lists.find(list => list.id === id);
+      if (!list) {
+        throw new Error('List not found');
+      }
+      const newLists = lists.filter(list => list.id !== id);
+      setLists(newLists);
+    } catch (error) {
+      console.error(error);
+    }
+
+    // Add list to archived list
+    try {
+      const list = lists.find(list => list.id === id);
+      if (!list) {
+        throw new Error('List not found');
+      }
+      const newArchived = [...archived, list];
+      setArchived(newArchived);
+    } catch (error) {
+      console.error(error);
     }
   }
 
-  const toggleList = (id: number) => {
-    // turn off all lists
-    setLists(lists.map(list => {
-      list.active = false;
-      return list;
-    }));
+  const removeList = (id: string) => {
+    if (!id) {
+      throw new Error('List ID is required');
+    }
 
-    // turn on the list with id
-    setLists(lists.map(list => {
+    const confirm = window.confirm('Are you sure you want to remove this list?');
+    if (!confirm) {
+      return;
+    }
+
+    // Remove list from archived list
+    try {
+      const arquivedList = archived.find(list => list.id === id);
+      if (!arquivedList) {
+        throw new Error('List not found');
+      }
+
+      const newArchived = archived.filter(list => list.id !== id);
+      setArchived(newArchived);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const updateList = (id: string, newData: IListTodo) => {
+    if (!id) {
+      throw new Error('List ID is required');
+    }
+
+    const list = lists.find(list => list.id === id);
+    if (!list) {
+      throw new Error('List not found');
+    }
+
+    const newLists = lists.map(list => {
       if (list.id === id) {
-        list.active = true;
+        return {
+          ...list,
+          ...newData
+        }
       }
       return list;
-    }));
+    });
+
+    setLists(newLists);
   }
 
-  const archiveList = (id: number) => {
-    let newList
-    const target = lists.find(list => list.id === id);
-    const archive = [...archived, target];
-
-    if (!target) {
-      throw new Error("Target list not found");
+  const activeList = (id: string) => {
+    if (!id) {
+      throw new Error('List ID is required');
     }
 
+    const newLists = lists.map(list => {
+      switch (list.id) {
+        case id:
+          list.active = true;
+          break;
+        default:
+          list.active = false;
+          break;
+      }
 
-    newList = lists.filter(list => list.id !== id);
-    console.log('archived', archive)
-    console.log('newList', newList)
+      return list;
+    })
 
-    // return
-    setArchived([...archived, target]);
-    setLists(newList);
-    // removeList(id);
+    setLists(newLists);
+    // set listActive
+    const newListActive = newLists.find(list => list.id === id);
+    if (!newListActive) {
+      throw new Error('List not found');
+    }
+    setListActive(newListActive);
   }
 
-  const getTodoList = (id: number) => {
-    const todoList = lists.find(list => list.id === id);
-
-    if (todoList === undefined) {
-      throw new Error("List not found");
+  const addTodo: IListTodoContext["addTodo"] = (title: string, listId: string) => {
+    // check if listId and title exist
+    if (!title || !listId) {
+      throw new Error('Title and listId are required');
+    }
+    // check if listId is valid
+    const list = lists.find(list => list.id === listId);
+    if (!list) {
+      throw new Error('List not found');
     }
 
-    return todoList;
-  }
+    const newTodo = {
+      id: uuidv4(),
+      title,
+      completed: false
+    }
 
-  const addTodo: IListTodoContext["addTodo"] = (title: string, listId: number) => {
-    setLists(lists.map(list => {
+    const updatedList = {
+      ...listActive,
+      todos: [...list.todos, newTodo]
+    }
+
+    // update active listActive with updated list
+    setListActive(updatedList);
+    // update list with updated list
+    const newLists = lists.map(list => {
       if (list.id === listId) {
-        list.todos.push({
-          id: Math.random(),
-          title,
-          completed: false,
-        });
+        // update list with updated list
+        list.todos = [...list.todos, newTodo];
+
+        return list;
       }
       return list;
-    }));
+    })
+    setLists(newLists);
   }
 
-  const removeTodo: IListTodoContext["removeTodo"] = (id: number, listId: number) => {
-    const remove = lists.map(list => {
+  const removeTodo: IListTodoContext["removeTodo"] = (id: string, listId: string) => {
+    const listRemoved = lists.map(list => {
       if (list.id === listId) {
         list.todos = list.todos.filter(todo => todo.id !== id);
       }
       return list;
     })
 
-    return console.log(remove);
 
-    setLists(remove);
+    setLists(listRemoved);
   }
 
-  const toggleTodo: IListTodoContext["toggleTodo"] = (id: number, listId: number) => {
-    setLists(lists.map(list => {
-      if (list.id === listId) {
-        list.todos = list.todos.map(todo => {
-          if (todo.id === id) {
-            todo.completed = !todo.completed;
-          }
-          return todo;
-        })
-      } else {
-        console.log(listId === list.id)
-        console.log('list.id', list.id)
-        console.log('listId', listId)
-        console.log("list not found");
+  const toggleTodo: IListTodoContext["toggleTodo"] = (id: string, listId: string) => {
+    if (!id || !listId) {
+      throw new Error('Todo ID and List ID are required');
+    }
+
+    const list = lists.find(list => list.id === listId);
+    if (!list) {
+      throw new Error('List not found');
+    }
+
+    const todo = list.todos.find(todo => todo.id === id);
+    if (!todo) {
+      throw new Error('Todo not found');
+    }
+
+    const newTodos = list.todos.map(todo => {
+      if (todo.id === id) {
+        todo.completed = !todo.completed;
       }
-      return list;
-    }));
+      return todo;
+    })
+
+    const newList = {
+      ...list,
+      todos: newTodos
+    }
+
+    updateList(listId, newList);
+    setListActive(newList);
   }
 
 
@@ -149,9 +238,8 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
       lists,
       listActive,
       addList,
+      activeList,
       removeList,
-      toggleList,
-      getTodoList,
       addTodo,
       removeTodo,
       toggleTodo,

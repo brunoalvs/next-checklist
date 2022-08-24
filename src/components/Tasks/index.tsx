@@ -1,29 +1,16 @@
-import { IListTodo } from "../../types/todo";
+import { useEffect } from "react";
 import { Button } from "../shared/Button";
 import { useTodoContext } from "../../contexts/todo";
+import { TaskList } from "../TaskList";
 
 import { ButtonsContainer, Container, ErrorContainer, Header } from './styles'
-import { TaskList } from "../TaskList";
-import { useEffect, useState } from "react";
 
-interface Tasks {
-  // list: IListTodo
-}
-
-export const Tasks = ({ }: Tasks) => {
+export const Tasks = () => {
   const { addTodo, addList, listActive, archiveList } = useTodoContext()
-  const [list, setList] = useState<IListTodo>(listActive)
 
-  const handleAddTodo = (todo: string) => {
-    console.log(`creating todo: ${todo}`)
-    addTodo(todo, list.id)
-  }
+  useEffect(() => { }, [listActive])
 
-  useEffect(() => {
-    setList(listActive)
-  }, [listActive])
-
-  if (!list) return (
+  if (!listActive) return (
     <ErrorContainer>
       <p>No list selected.</p>
       <Button onClick={() => addList('List 1')}>Create a new list</Button>
@@ -33,12 +20,12 @@ export const Tasks = ({ }: Tasks) => {
   return (
     <Container>
       <Header>
-        <h2>{list.title}</h2>
+        <h2>{listActive.title}</h2>
         <ButtonsContainer>
-          <Button onClick={() => handleAddTodo(`Task ${list.todos.length + 1}`)}>
+          <Button onClick={() => addTodo(`Task ${listActive.todos.length + 1}`, listActive.id)}>
             Add Task
           </Button>
-          <Button onClick={() => archiveList(list.id)}>
+          <Button onClick={() => archiveList(listActive.id)}>
             Archive List
           </Button>
         </ButtonsContainer>

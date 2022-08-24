@@ -4,10 +4,10 @@ import { TodoList } from '../../TodoList'
 import { Container, Header } from './styles'
 
 export const Sidebar = () => {
-  const { lists, addList, toggleList } = useTodoContext()
+  const { lists, addList, activeList } = useTodoContext()
 
-  const handleClickList = (listId: number) => {
-    toggleList(listId)
+  const handleClickList = (listId: string) => {
+    activeList(listId)
   }
 
   return (

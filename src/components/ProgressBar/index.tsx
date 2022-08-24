@@ -13,8 +13,6 @@ export const ProgressBar = () => {
       return
     }
 
-    console.log(listActive.todos)
-
     setTodosDone(listActive.todos.filter(todo => todo.completed).length)
     setTodosTotal(listActive.todos.length)
   }, [listActive])

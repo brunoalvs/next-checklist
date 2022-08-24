@@ -3,7 +3,7 @@ import { Container, Item } from './styles'
 
 interface TodoListProps {
   lists: IListTodo[];
-  activeList: (listId: number) => void;
+  activeList: (listId: string) => void;
 }
 
 export const TodoList = ({ lists, activeList }: TodoListProps) => {

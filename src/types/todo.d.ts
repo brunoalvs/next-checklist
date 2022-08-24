@@ -1,11 +1,13 @@
+import { uuid} from 'uuid'
+
 export interface ITodo {
-  id: number;
+  id: string;
   title: string;
   completed: boolean;
 }
 
 export interface IListTodo {
-  id: number;
+  id: string;
   title: string;
   active: boolean;
   completed: boolean;
@@ -17,11 +19,11 @@ export interface IListTodoContext {
   listActive: IListTodo;
   archived: IListTodo[];
   addList: (title: string) => void;
-  removeList: (id: number) => void;
-  toggleList: (id: number) => void;
-  archiveList: (id: number) => void;
-  getTodoList: (id: number) => void;
-  addTodo: (title: string, listId: number) => void;
-  removeTodo: (id: number, listId: number) => void;
-  toggleTodo: (id: number, listId: number) => void;
+  removeList: (id: string) => void;
+  activeList: (id: string) => void;
+  archiveList: (id: string) => void;
+  // getTodoList: (id: string) => void;
+  addTodo: (title: string, listId: string) => void;
+  removeTodo: (id: string, listId: string) => void;
+  toggleTodo: (id: string, listId: string) => void;
 }
