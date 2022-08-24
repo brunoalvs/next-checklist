@@ -3,7 +3,7 @@ import styled from "styled-components"
 export const Container = styled.div`
   /* border: 1px solid ${props => props.theme.colors.primary}; */
   width: 100%;
-  height: 1.5rem;
+  height: 1.25rem;
 
   background-color: ${props => props.theme.colors.light.background[1]};
   border-radius: .5rem;
@@ -12,9 +12,15 @@ export const Container = styled.div`
   overflow: hidden;
 `
 export const Text = styled.p`
-  font-size: small;
-  text-align: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
+  font-size: small;
+  font-weight: 600;
+  position: absolute;
 `
 
 export const Bar = styled.div`
