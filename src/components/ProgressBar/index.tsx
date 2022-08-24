@@ -13,15 +13,13 @@ export const ProgressBar = () => {
       return
     }
 
-    console.log(listActive.todos)
-
     setTodosDone(listActive.todos.filter(todo => todo.completed).length)
     setTodosTotal(listActive.todos.length)
   }, [listActive])
 
   return (
     <Container>
-      <Text>{todosDone}/{todosTotal}</Text>
+      <Text>{`${Math.round((todosDone / todosTotal) * 100)}%`}</Text>
       <Bar className="progress-bar-done" style={{ width: `${todosDone / todosTotal * 100}%` }}></Bar>
     </Container>
   )

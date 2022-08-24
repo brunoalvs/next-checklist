@@ -7,7 +7,11 @@ export const Container = styled.div`
 
   display: grid;
   /* Tablet and Desktop */
-  grid-template-columns: 50px 1fr 4fr;
+  grid-template-columns: 50px minmax(220px, 1fr) 3fr;
+
+  @media (min-width: 968px) {
+    grid-template-columns: 50px 1fr 4fr;
+  }
 `
 
 export const Header = styled.header`
