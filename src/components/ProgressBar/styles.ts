@@ -25,7 +25,7 @@ export const Text = styled.p`
 export const Bar = styled.div`
   min-width: 0.05%;
   height: 100%;
-  background: ${props => props.theme.colors.primary};
+  background: ${props => props.theme.colors.secondary};
   border-radius: .5rem;
 
   transition: width .3s ease-in-out;

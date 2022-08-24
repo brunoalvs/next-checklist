@@ -26,8 +26,8 @@ interface Theme {
 
 const theme: Theme = {
   colors: {
-    primary: '#ae2be2',
-    secondary: '#c7a2d6',
+    primary: '#2be277',
+    secondary: '#a2d6b5',
     dark: {
       background: [
         '#000',
