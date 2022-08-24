@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useTodoContext } from "../../contexts/todo";
 import { ITodo } from "../../types/todo";
+import { ProgressBar } from "../ProgressBar";
 import { TaskItem } from "../TaskItem";
 
 import { Container } from "./styles";
@@ -29,6 +30,7 @@ export const TaskList = () => {
 
   return (
     <Container>
+      <ProgressBar />
       {todos.map(todo => (
         <TaskItem key={todo.id} task={todo} />
       ))}
