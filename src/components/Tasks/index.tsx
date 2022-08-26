@@ -4,22 +4,30 @@ import { useTodoContext } from "../../contexts/todo";
 import { TaskList } from "../TaskList";
 
 import { ButtonsContainer, Container, ErrorContainer, Header } from './styles'
-import { ModalAddNewTask } from "../Modals";
+import { ModalAddNewList, ModalAddNewTask } from "../Modals";
 
 export const Tasks = () => {
   const { addTodo, addList, listActive, archiveList } = useTodoContext()
-  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isModalAddNewTaskOpen, setIsModalAddNewTaskOpen] = useState(false)
+  const [isModalAddNewListOpen, setIsModalAddNewListOpen] = useState(false)
 
   useEffect(() => { }, [listActive])
+  const onRequestCloseModal = () => setIsModalAddNewTaskOpen(false)
 
   if (!listActive) return (
-    <ErrorContainer>
-      <p>No list selected.</p>
-      <Button onClick={() => addList('List 1')}>Create a new list</Button>
-    </ErrorContainer>
+    <>
+      <ErrorContainer>
+        <p>No list selected.</p>
+        <Button onClick={() => setIsModalAddNewTaskOpen(true)}>Create a new list</Button>
+      </ErrorContainer>
+      <ModalAddNewList
+        isOpen={isModalAddNewTaskOpen}
+        onRequestClose={onRequestCloseModal}
+        addNewList={addList}
+      />
+    </>
   )
 
-  const onRequestCloseModal = () => setIsModalOpen(false)
 
   const handleClick = (todo: string) => {
     addTodo(todo, listActive.id)
@@ -31,7 +39,7 @@ export const Tasks = () => {
         <Header>
           <h2>{listActive.title}</h2>
           <ButtonsContainer>
-            <Button onClick={() => setIsModalOpen(true)}>
+            <Button onClick={() => setIsModalAddNewTaskOpen(true)}>
               Add Task
             </Button>
             <Button onClick={() => archiveList(listActive.id)}>
@@ -42,7 +50,7 @@ export const Tasks = () => {
         <TaskList />
       </Container>
       <ModalAddNewTask
-        isOpen={isModalOpen}
+        isOpen={isModalAddNewTaskOpen}
         onRequestClose={onRequestCloseModal}
         addNewTask={handleClick}
       />

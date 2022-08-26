@@ -6,21 +6,21 @@ import {Container, Header} from './styles'
 
 interface AddNewTaskProps {
   isOpen: boolean
-  addNewTask: (todo: string) => void
+  addNewList: (todo: string) => void
   onRequestClose: () => void
 }
 
-export const AddNewTask = ({isOpen, addNewTask, onRequestClose}: AddNewTaskProps) => {
-  const [newTodo, setNewTodo] = useState("")
+export const AddNewList = ({isOpen, addNewList: addNewTask, onRequestClose}: AddNewTaskProps) => {
+  const [newList, setNewList] = useState("")
 
   const handleClick = () => {
-    addNewTask(newTodo)
-    setNewTodo("")
+    addNewTask(newList)
+    setNewList("")
     onRequestClose()
   }
 
   useEffect(() => {
-    if (!isOpen) setNewTodo("")
+    if (!isOpen) setNewList("")
   } , [isOpen])
 
   return (
@@ -48,19 +48,19 @@ export const AddNewTask = ({isOpen, addNewTask, onRequestClose}: AddNewTaskProps
         <button onClick={()=> onRequestClose()}>Close</button>
       </Header>
       <Container>
-        <h1>New Task</h1>
+        <h1>New List</h1>
 
         <Input
           autoFocus
           type="text"
           required
-          value={newTodo}
-          onChange={(e) => setNewTodo(e.target.value)}
+          value={newList}
+          onChange={(e) => setNewList(e.target.value)}
           placeholder="Enter a new task"
         />
 
         <Button
-          disabled={newTodo.length === 0}
+          disabled={newList.length === 0}
           onClick={() => handleClick()}
         >
           Add
