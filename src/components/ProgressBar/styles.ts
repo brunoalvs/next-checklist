@@ -22,10 +22,13 @@ export const Text = styled.p`
   position: absolute;
 `
 
-export const Bar = styled.div`
+export const Bar = styled.div<{
+  progress: number;
+}>`
+  width: ${props => props.progress}%;
   min-width: 0.05%;
   height: 100%;
-  background: ${props => props.theme.colors.secondary};
+  background: ${props => props.progress < 100 ? props.theme.colors.secondary : props.theme.colors.primary};
   border-radius: .5rem;
 
   transition: width .3s ease-in-out;

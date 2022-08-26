@@ -3,9 +3,8 @@ import { Button } from "../shared/Button";
 import { useTodoContext } from "../../contexts/todo";
 import { TaskList } from "../TaskList";
 
-import ReactModal from 'react-modal'
-
 import { ButtonsContainer, Container, ErrorContainer, Header } from './styles'
+import { ModalAddNewTask } from "../Modals";
 
 export const Tasks = () => {
   const { addTodo, addList, listActive, archiveList } = useTodoContext()
@@ -19,6 +18,12 @@ export const Tasks = () => {
       <Button onClick={() => addList('List 1')}>Create a new list</Button>
     </ErrorContainer>
   )
+
+  const onRequestCloseModal = () => setIsModalOpen(false)
+
+  const handleClick = (todo: string) => {
+    addTodo(todo, listActive.id)
+  }
 
   return (
     <>
@@ -36,26 +41,11 @@ export const Tasks = () => {
         </Header>
         <TaskList />
       </Container>
-      <ReactModal isOpen={isModalOpen}>
-        <div style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '1rem',
-          height: '100%',
-          width: '100%',
-        }}>
-          <h1>Modal</h1>
-
-          <Button onClick={() => {
-            addTodo(`Task ${listActive.todos.length + 1}`, listActive.id)
-            setIsModalOpen(false)
-          }}>
-            Add Task
-          </Button>
-        </div>
-      </ReactModal>
+      <ModalAddNewTask
+        isOpen={isModalOpen}
+        onRequestClose={onRequestCloseModal}
+        addNewTask={handleClick}
+      />
     </>
   )
 }
