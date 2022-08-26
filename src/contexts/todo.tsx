@@ -33,8 +33,9 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     console.log('updated list', lists.find(list => list.active)?.title)
+    setListActive(lists.find(list => list.active) || lists[0]);
 
-  }, [lists]);
+  }, [lists, listActive]);
 
   const addList = (title: string) => {
     const newList: IListTodo = {
@@ -43,6 +44,10 @@ export const TodoProvider = ({ children }: { children: React.ReactNode }) => {
       active: lists.find(list => list.active) ? false : true,
       completed: false,
       todos: []
+    }
+
+    if (lists.length === 0) {
+      newList.active = true;
     }
 
     setLists([...lists, newList]);
