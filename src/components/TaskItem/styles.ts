@@ -15,6 +15,7 @@ export const Container = styled.section<{
   }
 
   ${props => props.isChecked && css`
+    opacity: 0.5;
     text-decoration: line-through;
   `}
 `

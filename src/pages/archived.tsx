@@ -17,10 +17,10 @@ const Home: NextPage = () => {
           <link rel="icon" href="/favicon.ico" />
         </Head>
 
+        <h1>Archived</h1>
         {
           archived.length > 0 && (
             <>
-              <h1>Archived</h1>
               {archived.map(list => (
                 <div key={list.id}>
                   <h2>{list.title} - {list.id}</h2>
