@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { Logo } from '../Logo';
 import { Sidebar } from './Sidebar'
+
+import HomeIcon from '../../../public/home.svg'
+import ListsIcon from '../../../public/lists.svg'
+import ArchivedIcon from '../../../public/archive.svg'
 
 import { Container, Header, Content, NavigationVertical, NavigationHorizontal } from './styles'
 
@@ -11,7 +16,7 @@ interface LayoutProps {
 }
 
 export const Layout = ({ children }: LayoutProps) => {
-
+  const {pathname} = useRouter()
   const [isMobile, setIsMobile] = useState(false);
 
   function handleResize() {
@@ -36,20 +41,20 @@ export const Layout = ({ children }: LayoutProps) => {
         </Content>
         <NavigationHorizontal>
           <Link href='/'>
-            <a>
-              <Image src='/home.svg' alt='home' width={24} height={24} />
+            <a className={pathname === '/' ? 'active' : ''}>
+              <HomeIcon alt='home' width={24} height={24} />
               Home
             </a>
           </Link>
           <Link href='/archived'>
-            <a>
-              <Image src='/archive.svg' alt='search' width={24} height={24} />
+          <a className={pathname === '/archived' ? 'active' : ''}>
+              <ArchivedIcon alt='search' width={24} height={24} />
               Archived
             </a>
           </Link>
           <Link href='/lists'>
-            <a>
-              <Image src='/lists.svg' alt='search' width={24} height={24} />
+            <a className={pathname === '/lists' ? 'active' : ''}>
+              <ListsIcon alt='search' width={24} height={24} />
               Lists
             </a>
           </Link>

@@ -30,7 +30,6 @@ export const Header = styled.header`
   background-color: ${props => props.theme.colors.dark.background[1]};
   padding: 1rem .2rem;
 
-
   @media (min-width: 600px) {
     flex-direction: column;
     align-items: center;
@@ -68,11 +67,21 @@ export const NavigationHorizontal = styled.nav`
     grid-template-columns: 1fr;
     grid-template-rows: 30px 1fr;
     gap: 0.25rem;
+    justify-items: center;
+    align-items: center;
 
     color: ${props => props.theme.colors.dark.text};
     font-size: 0.8rem;
     padding: 0.5rem;
     text-align: center;
+
+    &.active {
+      color: ${props => props.theme.colors.primary};
+
+      svg path {
+        fill: ${props => props.theme.colors.primary};
+      }
+    }
   }
 `
 
