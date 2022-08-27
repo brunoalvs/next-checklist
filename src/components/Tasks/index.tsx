@@ -11,27 +11,21 @@ export const Tasks = () => {
   const [isModalAddNewTaskOpen, setIsModalAddNewTaskOpen] = useState(false)
   const [isModalAddNewListOpen, setIsModalAddNewListOpen] = useState(false)
 
-  useEffect(() => { }, [listActive])
-  const onRequestCloseModal = () => setIsModalAddNewTaskOpen(false)
+  useEffect(() => { }, [listActive, isModalAddNewTaskOpen, isModalAddNewListOpen])
 
   if (!listActive) return (
     <>
       <ErrorContainer>
         <p>No list selected.</p>
-        <Button onClick={() => setIsModalAddNewTaskOpen(true)}>Create a new list</Button>
+        <Button onClick={() => setIsModalAddNewListOpen(true)}>Create a new list</Button>
       </ErrorContainer>
       <ModalAddNewList
-        isOpen={isModalAddNewTaskOpen}
-        onRequestClose={onRequestCloseModal}
+        isOpen={isModalAddNewListOpen}
+        onRequestClose={() => setIsModalAddNewListOpen(false)}
         addNewList={addList}
       />
     </>
   )
-
-
-  const handleClick = (todo: string) => {
-    addTodo(todo, listActive.id)
-  }
 
   return (
     <>
@@ -43,7 +37,7 @@ export const Tasks = () => {
               Add Task
             </Button>
             <Button onClick={() => archiveList(listActive.id)}>
-              Archive List
+              Archive
             </Button>
           </ButtonsContainer>
         </Header>
@@ -51,8 +45,8 @@ export const Tasks = () => {
       </Container>
       <ModalAddNewTask
         isOpen={isModalAddNewTaskOpen}
-        onRequestClose={onRequestCloseModal}
-        addNewTask={handleClick}
+        onRequestClose={() => setIsModalAddNewTaskOpen(false)}
+        addNewTask={(todo) => addTodo(todo, listActive.id)}
       />
     </>
   )

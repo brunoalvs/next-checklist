@@ -2,21 +2,26 @@ import { useEffect, useState } from "react"
 import ReactModal from "react-modal"
 import { Button } from "../../shared/Button"
 import { Input } from '../../shared/Input'
-import {Container, Header} from './styles'
+import CloseIcon from '../../../../public/close.svg'
 
-interface AddNewTaskProps {
+import {Container, Header, Footer, CloseButton} from './styles'
+
+interface AddNewListProps {
   isOpen: boolean
   addNewList: (todo: string) => void
   onRequestClose: () => void
 }
 
-export const AddNewList = ({isOpen, addNewList: addNewTask, onRequestClose}: AddNewTaskProps) => {
+export const AddNewList = ({isOpen, addNewList, onRequestClose}: AddNewListProps) => {
   const [newList, setNewList] = useState("")
 
-  const handleClick = () => {
-    addNewTask(newList)
+  async function createNewList () {
+    addNewList(newList)
     setNewList("")
-    onRequestClose()
+  }
+
+  const handleClick = () => {
+    createNewList().then(() => onRequestClose())
   }
 
   useEffect(() => {
@@ -29,11 +34,14 @@ export const AddNewList = ({isOpen, addNewList: addNewTask, onRequestClose}: Add
       onRequestClose={() => onRequestClose()}
       shouldCloseOnOverlayClick={true}
       shouldCloseOnEsc={true}
+      ariaHideApp={false}
       style={{
         overlay: {
           backgroundColor: "rgba(0, 0, 0, 0.5)"
         },
         content: {
+          width: "80%",
+          maxWidth: "300px",
           top: "50%",
           left: "50%",
           right: "auto",
@@ -45,7 +53,9 @@ export const AddNewList = ({isOpen, addNewList: addNewTask, onRequestClose}: Add
       }}
     >
       <Header>
-        <button onClick={()=> onRequestClose()}>Close</button>
+        <CloseButton onClick={()=> onRequestClose()}>
+          <CloseIcon />
+        </CloseButton>
       </Header>
       <Container>
         <h1>New List</h1>
@@ -56,15 +66,25 @@ export const AddNewList = ({isOpen, addNewList: addNewTask, onRequestClose}: Add
           required
           value={newList}
           onChange={(e) => setNewList(e.target.value)}
-          placeholder="Enter a new task"
+          placeholder="Enter a new list"
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              handleClick()
+            }
+          }}
         />
 
-        <Button
-          disabled={newList.length === 0}
-          onClick={() => handleClick()}
-        >
-          Add
-        </Button>
+        <Footer>
+          <Button onClick={() => onRequestClose()}>
+            Cancel
+          </Button>
+          <Button
+            disabled={newList.length === 0}
+            onClick={() => handleClick()}
+          >
+            Add
+          </Button>
+        </Footer>
       </Container>
     </ReactModal>
   )
